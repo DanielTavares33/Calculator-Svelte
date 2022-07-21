@@ -1,3 +1,6 @@
+const CLEAR_DISPLAY = true
+const DONT_CLEAR_DISPLAY = false;
+
 export default class CalculatorModel 
 {
   private _value: string
@@ -18,7 +21,7 @@ export default class CalculatorModel
       return new CalculatorModel(
         this._cleanDisplay || !this._value ? newValue : this._value + newValue, 
         this._accumulator, 
-        false, 
+        DONT_CLEAR_DISPLAY, 
         this._operation,
       )
   }
@@ -31,6 +34,29 @@ export default class CalculatorModel
         false, 
         this._operation,
       )
+  }
+
+  clearAll() 
+  {
+    return new CalculatorModel()
+  }
+
+  digitedOperation(nextOperation: string) 
+  {
+    return this.calculate(nextOperation)
+  }
+
+  calculate(nextOperation: string = null) 
+  {
+    const accumulator = !this._operation ? parseFloat(this._value) : eval(`${this._accumulator} ${this._operation} ${this._value}`)
+    const value = !this._operation ? this._value : `${accumulator}`
+
+    return new CalculatorModel(
+      value,
+      accumulator,
+      nextOperation ? CLEAR_DISPLAY : DONT_CLEAR_DISPLAY,
+      nextOperation
+    )
   }
 
   get value() 
